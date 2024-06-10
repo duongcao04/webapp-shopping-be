@@ -90,6 +90,17 @@ const userController = {
         }
     },
 
+    //GET ONE USER
+    getOneUser: async (req, res, next) => {
+        try {
+            const user = await User.findById(req.params.id);
+            res.status(200).json({ status: "isOkay", elements: user });
+        }
+        catch (error) {
+            next(error)
+        }
+    },
+
     //DELETE USER
     deleteUser: async (req, res, next) => {
         try {

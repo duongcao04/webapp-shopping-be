@@ -14,6 +14,9 @@ router.post("/refresh-token", userController.refreshToken);
 //GET ALL USER
 router.get("/",verifyAccessToken, userController.getAllUser);
 
+//GET ONE USER
+router.get("/:id",verifyAccessToken, userController.getOneUser);
+
 //DELETE USER
 router.delete("/:id", userController.deleteUser);
 
