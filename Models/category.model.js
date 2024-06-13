@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 
 const CategorySchema = new Schema(
     {
-        _id: mongoose.Schema.Types.ObjectId,
         name: {
             type: String,
             required: true,
