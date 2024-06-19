@@ -23,6 +23,7 @@ const userController = {
                     email: req.body.email,
                     password: req.body.password,
                     fullName: req.body.fullName,
+                    avatar: req.body.avatar,
                     role: req.body.role,
                 });
 

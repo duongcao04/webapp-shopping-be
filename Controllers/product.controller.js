@@ -10,16 +10,12 @@ const productController = {
 	// GET ALL PRODUCT
 	getAllProduct: async (req, res, next) => {
 		try {
-			const query = req.query;
+			const sortBy = req.query.sortBy;
 
-			if (query) {
-				const { limit, sortBy } = query;
-				const products = await Product.find()?.limit(limit)?.sort(sortBy);
-				res.status(200).json({ status: 'isOkay', elements: products });
-			}
+			const products = await Product.find()?.sort(sortBy);
+			const totalProduct = await Product.find().countDocuments();
 
-			const products = await Product.find();
-			res.status(200).json({ status: 'isOkay', elements: products });
+			res.status(200).json({ status: 'isOkay', totalProduct, elements: products });
 		} catch (error) {
 			next(error);
 		}
@@ -31,25 +27,38 @@ const productController = {
 			const query = req.query;
 
 			if (query) {
-				const { categoryId, price, sortBy } = query;
-				const categoryIdList = categoryId.split(',');
-				const cateToObjectID = categoryIdList.map(ele => new mongoose.Types.ObjectId(ele.id));
-				console.log(categoryIdList);
-				const handleFormatPrice = formatPrice(price);
+				const perPage = query.limit;
+				const sortBy = query.sortBy ?? '-price';
+				const page = query.page ?? '1';
+				const categoryId = query.categoryId ?? null;
+				const price = query.price;
 
-				const findOptions = [];
+				const handleFindOptions = () => {
+					let result = {};
 
-				if (price) {
-					findOptions.push(['price', handleFormatPrice])
-				}
+					if (price) {
+						const handleFormatPrice = formatPrice(price);
+						result['price'] = handleFormatPrice
+					}
 
-				// if (category) {
-				// 	findOptions.push(['category', handleFormatCategory])
-				// }
-				const findOptionsToObject = Object.fromEntries(findOptions)
-				const products = await Product.find()?.sort(sortBy).where('category_id').in(cateToObjectID).exec();
+					if (categoryId) {
+						let categoryIdList;
+						if (categoryId.includes(',')) categoryIdList = categoryId.split(',');
+						else categoryIdList = categoryId
 
-				res.status(200).json({ status: 'isOkay', elements: products });
+						result['category_id'] = categoryIdList;
+					}
+					return result
+				};
+
+				const findOptions = handleFindOptions();
+
+				const products = await Product.find(findOptions)?.sort(sortBy)?.limit(perPage)?.skip((perPage * page) - perPage);
+
+				const totalProduct = await Product.find(findOptions).countDocuments();
+				const totalPage = (Math.ceil(totalProduct / (perPage ?? totalProduct)));
+
+				res.status(200).json({ status: 'isOkay', totalProduct, totalPage, elements: products });
 			}
 
 			const products = await Product.find();
