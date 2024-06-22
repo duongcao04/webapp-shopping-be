@@ -22,6 +22,10 @@ const ProductSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			ref: 'Category',
 		},
+		supplier_id: {
+			type: Schema.Types.ObjectId,
+			ref: 'Supplier',
+		}
 	},
 	{ timestamps: true }
 );
