@@ -12,10 +12,10 @@ router.post('/login', userController.loginUser);
 router.post('/refresh-token', userController.refreshToken);
 
 //GET ALL USER
-router.get('/', verifyAccessToken, userController.getAllUser);
+router.get('/', userController.getAllUser);
 
 //GET ONE USER
-router.get('/:id', verifyAccessToken, userController.getOneUser);
+router.get('/:id', userController.getOneUser);
 
 //DELETE USER
 router.delete('/:id', userController.deleteUser);

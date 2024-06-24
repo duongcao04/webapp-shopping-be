@@ -25,6 +25,7 @@ const UserSchema = new Schema(
       default:
         'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png',
     },
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
     historyOrder: [
       {
         _id: { type: Schema.ObjectId, auto: true },
