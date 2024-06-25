@@ -1,18 +1,18 @@
+const mongoose = require('mongoose');
 const createError = require('http-errors');
 
 const Product = require('../Models/product.model');
 const Category = require('../Models/category.model');
 
 const { formatPrice } = require('../helpers/formatPrice');
-const mongoose = require('mongoose');
 
 const productController = {
   // GET ALL PRODUCT
   getAllProduct: async (req, res, next) => {
     try {
-      const sortBy = req.query.sortBy;
+      const { sortBy, limit } = req.query;
 
-      const products = await Product.find()?.sort(sortBy);
+      const products = await Product.find()?.sort(sortBy)?.limit(limit);
       const totalProduct = await Product.find().countDocuments();
 
       res
@@ -149,7 +149,7 @@ const productController = {
   updateProduct: async (req, res, next) => {
     try {
       const product = await Product.updateOne({ _id: req.params.id }, req.body);
-      
+
       if (!product) {
         throw createError.NotFound(`Product not found`);
       }

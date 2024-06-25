@@ -25,7 +25,8 @@ const ProductSchema = new Schema(
 		supplier_id: {
 			type: Schema.Types.ObjectId,
 			ref: 'Supplier',
-		}
+		},
+		reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
 	},
 	{ timestamps: true }
 );

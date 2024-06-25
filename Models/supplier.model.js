@@ -7,7 +7,7 @@ const Supplier = new Schema(
             type: String,
             required: true,
         },
-        description: {
+        contactInfor: {
             type: String,
         },
         products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
