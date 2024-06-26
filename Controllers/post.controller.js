@@ -42,6 +42,20 @@ const postController = {
       next(error);
     }
   },
+
+  deletePost: async (req, res, next) => {
+    try {
+      const post = await Post.findByIdAndDelete(req.params.id);
+
+      if (!post) {
+        throw createError.NotFound(`Post not found`);
+      }
+
+      res.json({ status: 'isOkay', message: 'Post removed' });
+    } catch (error) {
+      next(error);
+    }
+  },
 };
 
 module.exports = postController;

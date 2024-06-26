@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 const VoucherSchema = new Schema(
 	{
+		name: {
+			type: String,
+			required: true,
+		},
 		code: {
 			type: String,
 			required: true,
@@ -11,7 +15,7 @@ const VoucherSchema = new Schema(
 			type: Number,
 			required: true,
 		},
-		ExpiryDate: {
+		expiryDate: {
 			type: Date,
 			required: true,
 		},

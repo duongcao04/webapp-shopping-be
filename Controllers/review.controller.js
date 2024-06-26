@@ -8,23 +8,26 @@ const reviewController = {
 	getAllReview: async (req, res, next) => {
 		try {
 			const sortBy = req.query.sortBy ?? '-createdAt';
+			const productId = req.query.productId;
 
-			const reviews = await Review.find()?.sort(sortBy);
+			const handleRenderOptions = () => {
+				let result = {};
+				if (req.query.productId) {
+					result['product_id'] = productId;
+				}
+				return result;
+			}
+
+			const options = handleRenderOptions();
+
+			console.log(options);
+
+			const reviews = await Review.find(options)?.sort(sortBy);
+			// const reviews = await Review.find({ product_id: productId });
 
 			res
 				.status(200)
 				.json({ status: 'isOkay', elements: reviews });
-		} catch (error) {
-			next(error);
-		}
-	},
-
-	getReviewOfProduct: async (req, res, next) => {
-		try {
-			const { productId } = req.query
-			const reviews = await Review.find({ product_id: productId });
-
-			res.status(200).json({ status: 'isOkay', elements: reviews });
 		} catch (error) {
 			next(error);
 		}
@@ -44,7 +47,7 @@ const reviewController = {
 				await product.updateOne({ $push: { reviews: savedReview._id } });
 			}
 
-			res.status(200).json(savedPost);
+			res.status(200).json(savedReview);
 		} catch (error) {
 			next(error);
 		}
