@@ -143,10 +143,21 @@ const userController = {
   // Update History Order
   addOrder: async (req, res, next) => {
     try {
-      const order = req.body;
+      let order = req.body;
+
+      // Add Gift Point
+      order.order['giftPoint'] = order.order?.voucher?.discountAmount
+        ? (order.order.totalAmount -
+          order.order?.voucher?.discountAmount +
+          order.order.shipping) *
+        0.01
+        : (order.order.totalAmount + order.order.shipping) * 0.01;
+
       const user = await User.findById(req.params.id);
 
-      await user.updateOne({ $push: { historyOrder: order } });
+      const newTotalPoit = user.totalPoint + order.order['giftPoint'];
+
+      await user.updateOne({ totalPoint: newTotalPoit, $push: { historyOrder: order } });
 
       if (!user) {
         throw createError.NotFound(`User not exist`);

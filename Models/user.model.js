@@ -27,6 +27,10 @@ const UserSchema = new Schema(
     },
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
     reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
+    totalPoint: {
+      type: Number,
+      default: 0,
+    },
     historyOrder: [
       {
         _id: { type: Schema.ObjectId, auto: true },
@@ -66,6 +70,14 @@ const UserSchema = new Schema(
           productList: { type: Array },
           shipping: {
             type: Number,
+          },
+          voucher: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Voucher',
+          },
+          giftPoint: {
+            type: Number,
+            default: 0
           },
           totalAmount: {
             type: Number,

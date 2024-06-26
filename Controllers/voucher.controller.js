@@ -17,6 +17,24 @@ const voucherController = {
 		}
 	},
 
+	getVoucherByCode: async (req, res, next) => {
+		try {
+			const voucherCode = req.params.code
+
+			const voucher = await Voucher.findOne({code: voucherCode.toLowerCase()});
+
+			if (!voucher) {
+				throw createError.NotFound(`Voucher not found`);
+			}
+
+			res
+				.status(200)
+				.json({ status: 'isOkay', elements: voucher });
+		} catch (error) {
+			next(error);
+		}
+	},
+
 	createNewVoucher: async (req, res, next) => {
 		try {
 			const newVoucher = new Voucher(req.body);
@@ -37,6 +55,24 @@ const voucherController = {
 			}
 
 			res.json({ status: 'isOkay', message: 'Voucher removed' });
+		} catch (error) {
+			next(error);
+		}
+	},
+
+	usedVoucher: async (req, res, next) => {
+		try {
+			const voucherCode = req.params.code
+
+			const voucher = await Voucher.findOne({code: voucherCode.toLowerCase()});
+
+			if (!voucher) {
+				throw createError.NotFound(`Voucher not found`);
+			}
+
+			res
+				.status(200)
+				.json({ status: 'isOkay', elements: 'Voucher is used' });
 		} catch (error) {
 			next(error);
 		}
