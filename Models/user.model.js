@@ -27,64 +27,11 @@ const UserSchema = new Schema(
     },
     posts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Post' }],
     reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
+    historyOrder: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
     totalPoint: {
       type: Number,
       default: 0,
     },
-    historyOrder: [
-      {
-        _id: { type: Schema.ObjectId, auto: true },
-        createdAt: {
-          type: Date,
-          default: Date.now,
-        },
-        orderStatus: {
-          type: String,
-          enum: ['pending', 'success'],
-          default: 'pending',
-        },
-        information: {
-          type: Object,
-          name: {
-            type: String,
-            required: true,
-          },
-          address: {
-            type: String,
-            required: true,
-          },
-          phoneNumber: {
-            type: String,
-            required: true,
-          },
-          email: {
-            type: String,
-            required: true,
-          },
-          note: {
-            type: String,
-          },
-        },
-        order: {
-          type: Object,
-          productList: { type: Array },
-          shipping: {
-            type: Number,
-          },
-          voucher: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Voucher',
-          },
-          giftPoint: {
-            type: Number,
-            default: 0
-          },
-          totalAmount: {
-            type: Number,
-          },
-        },
-      },
-    ],
     role: {
       type: String,
       enum: ['member', 'staff', 'admin'],
@@ -110,7 +57,7 @@ UserSchema.methods.isCheckedPasswrod = async function (password) {
   try {
     return await bcrypt.compare(password, this.password);
   } catch (error) {
-    // next(error)
+    next(error)
   }
 };
 

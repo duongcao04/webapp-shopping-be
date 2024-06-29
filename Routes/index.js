@@ -6,10 +6,12 @@ const voucherRoute = require('./voucher.route');
 const productRoute = require('./product.route');
 const categoryRoute = require('./category.route');
 const supplierRoute = require('./supplier.route');
+const orderRoute = require('./order.route');
 
 const postRoute = require('./post.route');
 
 rootRouter.use("/user", userRoute);
+rootRouter.use("/order", orderRoute);
 rootRouter.use("/review", reviewRoute)
 
 rootRouter.use("/voucher", voucherRoute)

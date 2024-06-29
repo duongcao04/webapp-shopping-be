@@ -10,7 +10,6 @@ const {
 } = require('../helpers/jwt_services');
 
 const userController = {
-  //REGISTER USER
   registerUser: async (req, res, next) => {
     try {
       const { error } = userValidate(req.body);
@@ -24,7 +23,6 @@ const userController = {
           `${req.body.email} is ready been registered`
         );
       } else {
-        // Create new user
         const newUser = new User({
           email: req.body.email,
           password: req.body.password,
@@ -33,7 +31,6 @@ const userController = {
           role: req.body.role,
         });
 
-        //Save user to database
         const user = await newUser.save();
 
         res.status(200).json({ status: 'isOkay', elements: user });
@@ -43,7 +40,6 @@ const userController = {
     }
   },
 
-  //LOGIN
   loginUser: async (req, res, next) => {
     try {
       const { error } = userValidate(req.body);
@@ -72,7 +68,6 @@ const userController = {
     }
   },
 
-  //REFRESH TOKEN
   refreshToken: async (req, res, next) => {
     try {
       const { refreshToken } = req.body;
@@ -93,7 +88,6 @@ const userController = {
     }
   },
 
-  //GET ALL USER
   getAllUser: async (req, res, next) => {
     try {
       const user = await User.find();
@@ -103,7 +97,6 @@ const userController = {
     }
   },
 
-  //GET ONE USER
   getOneUser: async (req, res, next) => {
     try {
       const user = await User.findById(req.params.id);
@@ -113,7 +106,6 @@ const userController = {
     }
   },
 
-  //DELETE USER
   deleteUser: async (req, res, next) => {
     try {
       const user = await User.findByIdAndDelete(req.params.id);
@@ -126,7 +118,7 @@ const userController = {
       next(error);
     }
   },
-  // UPDATE USER
+
   updateUser: async (req, res, next) => {
     try {
       const user = await User.updateOne({ _id: req.params.id }, req.body);
@@ -140,37 +132,36 @@ const userController = {
     }
   },
 
-  // Update History Order
-  addOrder: async (req, res, next) => {
-    try {
-      let order = req.body;
+  // addOrder: async (req, res, next) => {
+  //   try {
+  //     let order = req.body;
 
-      // Add Gift Point
-      order.order['giftPoint'] = order.order?.voucher?.discountAmount
-        ? (order.order.totalAmount -
-          order.order?.voucher?.discountAmount +
-          order.order.shipping) *
-        0.01
-        : (order.order.totalAmount + order.order.shipping) * 0.01;
+  //     // Add Gift Point
+  //     order.order['giftPoint'] = order.order?.voucher?.discountAmount
+  //       ? (order.order.totalAmount -
+  //         order.order?.voucher?.discountAmount +
+  //         order.order.shipping) *
+  //       0.01
+  //       : (order.order.totalAmount + order.order.shipping) * 0.01;
 
-      const user = await User.findById(req.params.id);
+  //     const user = await User.findById(req.params.id);
 
-      const newTotalPoit = user.totalPoint + order.order['giftPoint'];
+  //     const newTotalPoit = user.totalPoint + order.order['giftPoint'];
 
-      await user.updateOne({ totalPoint: newTotalPoit, $push: { historyOrder: order } });
+  //     await user.updateOne({ totalPoint: newTotalPoit, $push: { historyOrder: order } });
 
-      if (!user) {
-        throw createError.NotFound(`User not exist`);
-      }
+  //     if (!user) {
+  //       throw createError.NotFound(`User not exist`);
+  //     }
 
-      res.json({
-        status: 'isOkay',
-        message: 'Add order successfully',
-      });
-    } catch (error) {
-      next(error);
-    }
-  },
+  //     res.json({
+  //       status: 'isOkay',
+  //       message: 'Add order successfully',
+  //     });
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // },
 };
 
 module.exports = userController;

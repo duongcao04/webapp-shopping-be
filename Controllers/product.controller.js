@@ -7,7 +7,6 @@ const Category = require('../Models/category.model');
 const { formatPrice } = require('../helpers/formatPrice');
 
 const productController = {
-  // GET ALL PRODUCT
   getAllProduct: async (req, res, next) => {
     try {
       const { sortBy, limit } = req.query;
@@ -23,7 +22,6 @@ const productController = {
     }
   },
 
-  // FILTER PRODUCT
   filterProduct: async (req, res, next) => {
     try {
       const query = req.query;
@@ -79,7 +77,6 @@ const productController = {
     }
   },
 
-  // PAGINATION PRODUCT
   pagination: async (req, res, next) => {
     try {
       const perPage = req.query.limit;
@@ -99,7 +96,6 @@ const productController = {
     }
   },
 
-  // GET ONE PRODUCT
   getOneProduct: async (req, res, next) => {
     try {
       const product = await Product.findById(req.params.id);
@@ -109,7 +105,6 @@ const productController = {
     }
   },
 
-  // CREATE PRODUCT
   createNewProduct: async (req, res, next) => {
     try {
       // const isExist = await Product.findOne({ name: req.body.name })
@@ -130,7 +125,6 @@ const productController = {
     }
   },
 
-  // DELETE PRODUCT
   deleteProduct: async (req, res, next) => {
     try {
       const product = await Product.findByIdAndDelete(req.params.id);
@@ -145,7 +139,6 @@ const productController = {
     }
   },
 
-  // UPDATE PRODUCT
   updateProduct: async (req, res, next) => {
     try {
       const product = await Product.updateOne({ _id: req.params.id }, req.body);
