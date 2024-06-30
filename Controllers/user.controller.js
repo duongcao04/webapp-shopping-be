@@ -1,6 +1,7 @@
 const createError = require('http-errors');
 
 const User = require('../Models/user.model');
+const Review = require('../Models/review.model');
 
 const { userValidate } = require('../helpers/validation');
 const {
@@ -90,7 +91,18 @@ const userController = {
 
   getAllUser: async (req, res, next) => {
     try {
-      const user = await User.find();
+      const handleFindOptions = () => {
+        let result = {};
+
+        if (req.query.name) {
+          result['fullName'] = { $regex: req.query.name };
+        }
+        return result;
+      };
+
+      const findOptions = handleFindOptions();
+
+      const user = await User.find(findOptions);
       res.status(200).json({ status: 'isOkay', elements: user });
     } catch (error) {
       next(error);
@@ -108,7 +120,10 @@ const userController = {
 
   deleteUser: async (req, res, next) => {
     try {
+      const userId = req.params.id;
       const user = await User.findByIdAndDelete(req.params.id);
+      await Review.deleteMany({user_id: userId});
+
       res.status(200).json({
         status: 'isOkay',
         message: 'Delete successfully',
@@ -131,37 +146,6 @@ const userController = {
       next(error);
     }
   },
-
-  // addOrder: async (req, res, next) => {
-  //   try {
-  //     let order = req.body;
-
-  //     // Add Gift Point
-  //     order.order['giftPoint'] = order.order?.voucher?.discountAmount
-  //       ? (order.order.totalAmount -
-  //         order.order?.voucher?.discountAmount +
-  //         order.order.shipping) *
-  //       0.01
-  //       : (order.order.totalAmount + order.order.shipping) * 0.01;
-
-  //     const user = await User.findById(req.params.id);
-
-  //     const newTotalPoit = user.totalPoint + order.order['giftPoint'];
-
-  //     await user.updateOne({ totalPoint: newTotalPoit, $push: { historyOrder: order } });
-
-  //     if (!user) {
-  //       throw createError.NotFound(`User not exist`);
-  //     }
-
-  //     res.json({
-  //       status: 'isOkay',
-  //       message: 'Add order successfully',
-  //     });
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // },
 };
 
 module.exports = userController;
